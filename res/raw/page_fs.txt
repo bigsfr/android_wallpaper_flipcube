@@ -1,0 +1,31 @@
+
+precision highp float;
+uniform vec2 uAspectRatio;
+varying vec2 vAspectPos;
+
+void main() {
+	gl_FragColor = vec4(0.9);
+	
+	if (vAspectPos.y < uAspectRatio.y - 0.4 && fract(vAspectPos.y * 7.5) < 0.1) {
+		gl_FragColor = vec4(0.6, 0.7, 1.0, 1.0);
+	}
+	
+	float ax = uAspectRatio.x;
+	if (vAspectPos.x > 0.278 - ax && vAspectPos.x < 0.3 - ax) {
+		gl_FragColor = mix(vec4(1.0, 0.7, 0.6, 1.0), gl_FragColor, 0.5);
+	}
+	
+	if (vAspectPos.x > 0.1 - ax && vAspectPos.x < 0.2 - ax) {
+		vec2 pos = vAspectPos;
+		pos.x += uAspectRatio.x;
+		if (distance(pos, vec2(0.15, uAspectRatio.y * 0.6)) < 0.05) {
+			gl_FragColor = vec4(0.0);
+		}
+		if (distance(pos, vec2(0.15, 0.0)) < 0.05) {
+			gl_FragColor = vec4(0.0);
+		}
+		if (distance(pos, vec2(0.15, -uAspectRatio.y * 0.6)) < 0.05) {
+			gl_FragColor = vec4(0.0);
+		}
+	}
+}

@@ -1,0 +1,9 @@
+
+uniform vec2 uAspectRatio;
+attribute vec2 aPosition;
+varying vec2 vAspectPos;
+
+void main() {
+	gl_Position = vec4(aPosition, 0.0, 1.0);
+	vAspectPos = aPosition * uAspectRatio;
+}
