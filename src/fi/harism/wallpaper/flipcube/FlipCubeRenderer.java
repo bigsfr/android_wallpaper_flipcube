@@ -66,6 +66,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 		mBufferQuad = ByteBuffer.allocateDirect(8);
 		mBufferQuad.put(QUAD).position(0);
 
+		// Vertex and normal data plus indices arrays.
 		final byte[][] CUBEVERTICES = { { -1, 1, 1 }, { -1, -1, 1 },
 				{ 1, 1, 1 }, { 1, -1, 1 }, { -1, 1, -1 }, { -1, -1, -1 },
 				{ 1, 1, -1 }, { 1, -1, -1 } };
@@ -84,6 +85,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 				{ { 4, 0, 6, 0, 2, 6 }, { 4 } },
 				{ { 1, 5, 3, 5, 7, 3 }, { 5 } } };
 
+		// Generate lines buffer.
 		mBufferCubeLines = ByteBuffer.allocateDirect(6 * 8 * 6);
 		for (int i = 0; i < CUBELINES.length; ++i) {
 			for (int j = 0; j < CUBELINES[i][0].length; ++j) {
@@ -93,6 +95,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 		}
 		mBufferCubeLines.position(0);
 
+		// Generate fill buffer.
 		mBufferCubeFilled = ByteBuffer.allocateDirect(6 * 6 * 6);
 		for (int i = 0; i < CUBEFILLED.length; ++i) {
 			for (int j = 0; j < CUBEFILLED[i][0].length; ++j) {
@@ -276,7 +279,11 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 		}
 	}
 
+	/**
+	 * Renders page contents into currently active FBO.
+	 */
 	private void renderPage() {
+		// Render page background.
 		mShaderPage.useProgram();
 		int uAspectRatio = mShaderPage.getHandle("uAspectRatio");
 		int aPosition = mShaderPage.getHandle("aPosition");
@@ -288,6 +295,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 
 		GLES20.glDrawArrays(GLES20.GL_TRIANGLE_STRIP, 0, 4);
 
+		// Local rotation values.
 		long time = SystemClock.uptimeMillis();
 		float rx = ((time % 10000) / 10000f) * 360f;
 		float ry = ((time % 12000) / 12000f) * 360f;
@@ -308,6 +316,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 		Matrix.multiplyMM(modelViewProjM, 0, rotateM, 0, modelViewProjM, 0);
 		Matrix.multiplyMM(modelViewProjM, 0, translateM, 0, modelViewProjM, 0);
 
+		// View rotation values.
 		rx = ((time % 15000) / 15000f) * 360f;
 		ry = ((time % 18000) / 18000f) * 360f;
 		rz = ((time % 20000) / 20000f) * 360f;
@@ -322,6 +331,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 
 		Matrix.multiplyMM(modelViewProjM, 0, mMatrixProj, 0, modelViewProjM, 0);
 
+		// Render cube lines.
 		mShaderLine.useProgram();
 		int uModelViewProjM = mShaderLine.getHandle("uModelViewProjM");
 		int uNormalM = mShaderLine.getHandle("uNormalM");
@@ -347,6 +357,7 @@ public final class FlipCubeRenderer implements GLSurfaceView.Renderer {
 		GLES20.glLineWidth(5f);
 		GLES20.glDrawArrays(GLES20.GL_LINES, 0, 8 * 6);
 
+		// Render filled cube.
 		mShaderFill.useProgram();
 		uModelViewProjM = mShaderFill.getHandle("uModelViewProjM");
 		uNormalM = mShaderFill.getHandle("uNormalM");
