@@ -1,3 +1,10 @@
+Introduction
+============
+
+FlipBoard alike wallpaper in which rotating cube is rendered for flip pages.
+Precompiled application can be found at
+http://play.google.com/store/apps/details?id=fi.harism.wallpaper.flipcube
+
 License
 =======
 
